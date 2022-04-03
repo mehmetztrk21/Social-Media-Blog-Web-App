@@ -1,0 +1,100 @@
+﻿@model List<Blog>
+@{
+    ViewData["Title"] = "BlogListByWriter";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+
+<h1>BlogListByWriter</h1>
+
+
+<table class="table table-bordered">
+
+    <tr>
+        <th>#</th>
+        <th>Başlık</th>
+        <th>Oluşturulma Tarihi</th>
+        <th>Kategori</th>
+        <th>Durum</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>@item.Id</th>
+            <td>@item.title</td>
+            <td>@item.date.ToString("dd-MMM-yyyy").Split().GetValue(0)</td>
+            <td>@item.category.name</td>
+            @if (item.status)
+            {
+                <td class="text-success">Aktif</td>
+
+            }
+            else
+            {
+                <td class="text-danger">Pasif</td>
+            }
+            <td><a  class="btn btn-danger" onclick="deleteConfirm('@item.Id', '@item.title')">Sil</a> <a href="/blog/EditBlog/@item.Id" class="btn btn-warning">Düzenle</a></td>
+        </tr>
+    }
+</table>
+
+<a href="/blog/BlogAdd" class="btn btn-primary">Yeni Blog Oluştur</a>
+
+
+<!--bootstra pop up confirmation dialog-->
+<div class="modal fade" id="delete-conformation" tabindex="-1" role="dialog" aria-labelledby="deleteconformation">
+    <div class="modal-dialog" style="width:501px !important;margin:0 auto;">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#d9534f;color:white;">
+                <h4 class="modal-title" id="delete-conformation">
+                    Delete Confirmation
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <span>
+                                Are you sure you want to delete?
+                            </span>
+                            <strong id="deletedValueName">
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn btn-danger" value="Delete" onclick="deleteData()" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+        //this is only display bootstrap modal pop up dialog
+    var id_value;
+    var deleteConfirm = function (val,name) {
+        id_value = val;
+            $('#deletedValueName').text(name);
+            $('#delete-conformation').modal('show');
+    }
+        //call this function after click on confirm delete button
+        var deleteData = function () {
+        $('#divLoading').show();
+            var id = $('#id').val();
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("DeleteBlog", "blog")',
+            data: { 'id': id_value },
+            success: function (result) {
+                $("#delete-conformation").modal('hide');
+                location.reload();
+            },
+            error: function () {
+                $("#delete-conformation").modal('hide');
+            }
+        });
+       }
+</script>

@@ -16,14 +16,18 @@ namespace BusinessLayer.Concrete
         {
             _blogDal = blogDal;
         }
-        public void Add(Blog blog)
+        public void Add(Blog entity)
         {
-            throw new NotImplementedException();
+            _blogDal.Add(entity);
         }
 
-        public void Delete(Blog blog)
+        public void Delete(Blog entity)
         {
-            throw new NotImplementedException();
+            _blogDal.Delete(entity);
+        }
+        public List<Blog> GetListWithCategoryByWriter(int id)
+        {
+            return _blogDal.GetListWithCategoryByWriter(id);
         }
 
         public List<Blog> GetAll()
@@ -51,9 +55,9 @@ namespace BusinessLayer.Concrete
         }
 
 
-        public void Update(Blog blog)
+        public void Update(Blog entity)
         {
-            throw new NotImplementedException();
+            _blogDal.Update(entity);
         }
 
         public List<Blog> GetBlogListByWriter(int id)

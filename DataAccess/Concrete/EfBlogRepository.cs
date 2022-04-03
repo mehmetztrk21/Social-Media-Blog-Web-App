@@ -18,5 +18,13 @@ namespace DataAccessLayer.Concrete
                 return db.Blogs.Include(x => x.category).ToList();
             }
         }
+
+        public List<Blog> GetListWithCategoryByWriter(int id)
+        {
+            using (var db = new Context())
+            {
+                return db.Blogs.Include(x => x.category).Where(x=>x.WriterId==id).ToList();
+            }
+        }
     }
 }
