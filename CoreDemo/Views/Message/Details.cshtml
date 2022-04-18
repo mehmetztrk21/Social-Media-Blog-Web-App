@@ -1,0 +1,18 @@
+﻿@model Message
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+<div class="row">
+    <div class="col-md-8">
+        <h5>Buraya gönderenin Adı ve Resmi @Model.Id</h5>
+        <br />
+        <h6>@Model.Subject</h6>
+        <p>@Model.Detais</p>
+        <hr />
+        <small style="float:right;">@Model.Date.ToString("dd-MMM-yyyy").Split().GetValue(0)</small>
+        <br />
+        <a href="/Message/InBox">Geri Dön</a>
+    </div>
+</div>
+

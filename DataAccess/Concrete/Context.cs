@@ -8,11 +8,25 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Concrete
 {
-    public class Context:DbContext
+    public class Context : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("server=DESKTOP-3LV10LH\\SQLEXPRESS;database=CoreBlogDb;integrated security=SSPI");
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Message>()
+                .HasOne(x => x.SenderUser)
+                .WithMany(y => y.WriterSender)
+                .HasForeignKey(z => z.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Entity<Message>()
+            .HasOne(x => x.ReciverUser)
+            .WithMany(y => y.WriterReciver)
+            .HasForeignKey(z => z.ReciverId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
         }
 
         public DbSet<Blog> Blogs { get; set; }

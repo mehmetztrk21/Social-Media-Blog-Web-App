@@ -4,14 +4,16 @@ using DataAccessLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220418112704_mig_Message2_add_table")]
+    partial class mig_Message2_add_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,7 +211,37 @@ namespace DataAccess.Migrations
                     b.Property<string>("Detais")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReciverId")
+                    b.Property<string>("Receiver")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("EntityLayer.Concrete.Message2", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Detais")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ReceiverId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SenderId")
@@ -223,11 +255,11 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReciverId");
+                    b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Message2");
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.NewsLetter", b =>
@@ -338,11 +370,11 @@ namespace DataAccess.Migrations
                     b.Navigation("blog");
                 });
 
-            modelBuilder.Entity("EntityLayer.Concrete.Message", b =>
+            modelBuilder.Entity("EntityLayer.Concrete.Message2", b =>
                 {
                     b.HasOne("EntityLayer.Concrete.Writer", "ReciverUser")
                         .WithMany("WriterReciver")
-                        .HasForeignKey("ReciverId");
+                        .HasForeignKey("ReceiverId");
 
                     b.HasOne("EntityLayer.Concrete.Writer", "SenderUser")
                         .WithMany("WriterSender")

@@ -13,8 +13,7 @@ namespace CoreDemo.ViewComponents.Writer
         MessageManager mm = new MessageManager(new EfMessageRepository());
         public IViewComponentResult Invoke()
         {
-            string p = "mehmet.ztrk2134@gmail.com";
-            var values=mm.GetInboxListByWriter(p);
+            var values=mm.GetInboxListByWriter(2);
             return View(values);
         }
     }

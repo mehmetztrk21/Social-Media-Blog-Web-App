@@ -1,0 +1,27 @@
+﻿@model List<Message>
+@{
+    ViewData["Title"] = "InBox";
+    Layout = "~/Views/Shared/WriterLayout.cshtml";
+}
+
+<h1>Gelen Kutusu</h1>
+
+<table class="table table-bordered">
+
+    <tr>
+        <th>Gönderen</th>
+        <th>Konu</th>
+        <th>Tarih</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.SenderUser.name</td>
+            <td>@item.Subject</td>
+            <td>@item.Date.ToString("dd-MMM-yyyy").Split().GetValue(0)</td>
+
+            <td><a href="/Message/Details/@item.Id" class="btn btn-warning">Görüntüle</a></td>
+        </tr>
+    }
+</table>

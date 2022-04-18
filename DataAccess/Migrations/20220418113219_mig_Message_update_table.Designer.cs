@@ -4,14 +4,16 @@ using DataAccessLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220418113219_mig_Message_update_table")]
+    partial class mig_Message_update_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,7 +211,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("Detais")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReciverId")
+                    b.Property<int?>("ReceiverId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SenderId")
@@ -223,7 +225,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReciverId");
+                    b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
 
@@ -342,7 +344,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("EntityLayer.Concrete.Writer", "ReciverUser")
                         .WithMany("WriterReciver")
-                        .HasForeignKey("ReciverId");
+                        .HasForeignKey("ReceiverId");
 
                     b.HasOne("EntityLayer.Concrete.Writer", "SenderUser")
                         .WithMany("WriterSender")
