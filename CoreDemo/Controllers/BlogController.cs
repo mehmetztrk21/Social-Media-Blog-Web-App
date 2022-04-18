@@ -30,7 +30,10 @@ namespace CoreDemo.Controllers
 
         public IActionResult BlogListByWriter()
         {
-            var values = _blogs.GetListWithCategoryByWriter(1);
+            var usermail = User.Identity.Name;  //Sisteme Giriş yapmış kullanıcı.
+            Context c = new Context();
+            var writerId = c.Writers.Where(i => i.mail == usermail).Select(x => x.Id).FirstOrDefault();
+            var values = _blogs.GetListWithCategoryByWriter(writerId);
             return View(values);
         }
 
@@ -50,6 +53,9 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult BlogAdd(Blog blog)
         {
+            var usermail = User.Identity.Name;  //Sisteme Giriş yapmış kullanıcı.
+            Context c = new Context();
+            var writerId = c.Writers.Where(i => i.mail == usermail).Select(x => x.Id).FirstOrDefault();
             BlogValidator blogValidator = new BlogValidator();
             ValidationResult results = blogValidator.Validate(blog);
             if (results.IsValid)
@@ -57,7 +63,7 @@ namespace CoreDemo.Controllers
 
                 blog.status = true;
                 blog.date = DateTime.Parse(DateTime.Now.ToShortDateString());
-                blog.WriterId = 1;
+                blog.WriterId = writerId;
                 _blogs.Add(blog);
                 return RedirectToAction("BlogListByWriter", "Blog");
 
@@ -96,6 +102,10 @@ namespace CoreDemo.Controllers
         [HttpPost]
         public IActionResult EditBlog(Blog blog)
         {
+            var usermail = User.Identity.Name;  //Sisteme Giriş yapmış kullanıcı.
+            Context c = new Context();
+            var writerId = c.Writers.Where(i => i.mail == usermail).Select(x => x.Id).FirstOrDefault();
+            blog.WriterId = writerId;
             _blogs.Update(blog);
             return RedirectToAction("BlogListByWriter", "Blog");
         }
