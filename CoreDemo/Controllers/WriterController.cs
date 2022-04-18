@@ -1,7 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
+using CoreDemo.Models;
+using DataAccessLayer.Concrete;
+using EntityLayer.Concrete;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +16,7 @@ namespace CoreDemo.Controllers
 {
     public class WriterController : Controller
     {
+        WriterManager wm = new WriterManager(new EfWriterRepository());
         public IActionResult Index()
         {
             return View();
@@ -33,5 +41,69 @@ namespace CoreDemo.Controllers
         {
             return PartialView();
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult WriterEditProfile()
+        {
+            var values = wm.GetById(1);
+            return View(values);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult WriterEditProfile(Writer writer)
+        {
+            WriterValidator wl = new WriterValidator();
+            ValidationResult results = wl.Validate(writer);
+            if (results.IsValid)
+            {
+                wm.Update(writer);
+                return RedirectToAction("Index", "Dashboard");
+            }
+            else
+            {
+                foreach (var item in results.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
+            return View();
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult WriterAdd()
+        {
+
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult WriterAdd(AddWriterModel entity)
+        {
+         
+            Writer writer = new Writer();
+            writer.mail = entity.mail;
+            writer.name = entity.name;
+            writer.password = entity.password;
+            writer.status = true;
+            writer.about = entity.about;
+            wm.Add(writer);
+            if (entity.image != null)
+            {
+                var extension = Path.GetExtension(entity.image.FileName);
+                var image_name = Guid.NewGuid() + extension;
+                var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/writer/WriterImages/", image_name);
+                var stream = new FileStream(location, FileMode.Create);
+                entity.image.CopyTo(stream);
+                writer.image = image_name;
+               
+            }
+            return RedirectToAction("Index", "Dashboard");
+
+        }
     }
 }
+
