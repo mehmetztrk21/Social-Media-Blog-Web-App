@@ -46,8 +46,8 @@ namespace CoreDemo
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)  //giriþ yapmadan bir yere eriþim yapmaya çalýþýrsak bizi login sayfasýna yönlendir.
                 .AddCookie(x =>
                 {
-                x.LoginPath = "/Login/Index";
-             });
+                    x.LoginPath = "/Login/Index";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +80,10 @@ namespace CoreDemo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Blog}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(  //Area larýn çalýþmasý için bunu ekliyoruz.
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
